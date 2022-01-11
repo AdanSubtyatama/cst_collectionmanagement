@@ -20,4 +20,8 @@ class CoreBranch extends Model
     public function checkToken($token){
         return CoreBranch::where('branch_token',  $token)->first() ? true : false;
     }
+
+    public function city(){
+        return $this->belongsTo(CoreCity::class, 'city_id');
+    }
 }

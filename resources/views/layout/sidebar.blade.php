@@ -16,7 +16,7 @@
                         class="fas fa-columns"></i> <span>Preferensi</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('corebranch.index') }}">Data Cabang</a></li>
-                    <li><a class="nav-link" href="layout-transparent.html">Data Pelanggan</a>
+                    <li><a class="nav-link" href="{{ route('corebusinessCollector.index') }}">Data Collector</a>
                     </li>
                 </ul>
             </li>

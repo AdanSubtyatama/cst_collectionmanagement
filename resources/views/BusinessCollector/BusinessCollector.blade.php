@@ -1,4 +1,4 @@
-<x-app title='Branch Page'>
+<x-app title='Halaman Collector'>
     <div class="flex flex-row">
         @if (session()->has('success'))
             <div class="col-6 p-2 alert alert-success" role="alert">
@@ -14,7 +14,7 @@
     <div class="card bg-light mb-3">
         <div class="card-header flex-row">
             <div class="row">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addDataBranch">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addDataBusinessCollector">
                     Tambah Data
                 </button>
             </div>
@@ -26,33 +26,23 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Kode Cabang</th>
-                        <th>Nama Cabang</th>
-                        <th>Alamat Cabang</th>
-                        <th>Kota Cabang</th>
-                        <th>CP Cabang</th>
-                        <th>Email Cabang</th>
-                        <th>No Telepon 1</th>
+                        <th>Kode Collector</th>
+                        <th>Nama Collector</th>                        
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($brancs as $index => $branchitem)
+                    @foreach ($businessCollectors as $index => $businessCollectoritem)
                         <tr>
                             <td>{{ $index }}</td>
-                            <td>{{ $branchitem->branch_code }}</td>
-                            <td>{{ $branchitem->branch_name }}</td>
-                            <td>{{ $branchitem->branch_address }}</td>
-                            <td>{{ $branchitem->city['city_name']  }}</td>
-                            <td>{{ $branchitem->branch_contact_person }}</td>
-                            <td>{{ $branchitem->branch_email }}</td>
-                            <td>{{ $branchitem->branch_phone1 }}</td>
+                            <td>{{ $businessCollectoritem->business_collector_code }}</td>
+                            <td>{{ $businessCollectoritem->business_collector_name }}</td>
                             <td style="min-width: 80px">
                                 <div class="row">
                                     <div class="col-12">
-                                        <a href="{{ route('corebranch.edit', $branchitem->branch_id) }}"
+                                        <a href="{{ route('corebusinessCollector.edit', $businessCollectoritem->business_collector_id) }}"
                                             class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                                        <a onclick="return confirm('Anda yakin ingin menghapus data ini ?')" href="{{ route('corebranch.delete', $branchitem->branch_id) }}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                                        <a onclick="return confirm('Anda yakin ingin menghapus data ini ?')" href="{{ route('corebusinessCollector.delete', $businessCollectoritem->business_collector_id) }}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
                                     </div>
                                 </div>
                             </td>
@@ -66,23 +56,23 @@
     {{-- modal tambah --}}
 </x-app>
 
-<div class="modal fade" id="addDataBranch" tabindex="-1" aria-labelledby="addDataBranchLabel" aria-hidden="true">
+<div class="modal fade" id="addDataBusinessCollector" tabindex="-1" aria-labelledby="addDataBusinessCollectorLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form action="{{ route('corebranch.store') }}" method="POST">
+        <form action="{{ route('corebusinessCollector.store') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addDataBranchLabel">Add Data Branch</h5>
+                    <h5 class="modal-title" id="addDataBusinessCollectorLabel">Add Data Business Collector</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    @include('branch._form')
+                    @include('BusinessCollector._form')
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" value="" name="addDataBranch" class="btn btn-primary">Save changes</button>
+                    <button type="submit" value="" name="addDataBusinessCollector" class="btn btn-primary">Save changes</button>
                 </div>
         </form>
 

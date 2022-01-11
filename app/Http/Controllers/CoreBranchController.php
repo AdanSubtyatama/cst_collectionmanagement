@@ -4,15 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CoreBranchRequest;
 use App\Models\CoreBranch;
-use Illuminate\Http\Request;
+use App\Models\CoreCity;
 
 class CoreBranchController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function setToken(){
         session()->put('branch_token', md5(date("YmdHis")));
     }
@@ -22,15 +18,11 @@ class CoreBranchController extends Controller
     public function index()
     {
         $this->setToken();
-        return view('branch.branch', ['brancs' => CoreBranch::all()]);
+        $citys = CoreCity::get(); 
+        $branchs = CoreBranch::where('data_state', '0')->get();
+        return view('branch.branch', ['brancs' => $branchs, 'branch' => new CoreBranch, 'citys'=> $citys ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(CoreBranchRequest $request)
     {   
         $request->merge([
@@ -41,54 +33,47 @@ class CoreBranchController extends Controller
         if(CoreBranch::checkToken( $this->getToken())){
             return redirect('/branch')->with('success', 'Data ditambahkan Sebelumnya !');            
         };
-        CoreBranch::create($request->all());
+        CoreBranch::create($request->all()) ? $msg = 'Data Berhasil Ditambahkan !' : $msg = 'Data gagal Ditambahkan !';
         
-        return redirect('/branch')->with('success', 'Data Berhasil Ditambahkan !');            
+        return redirect('/branch')->with('success', $msg);            
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function edit(CoreBranch $branch)
     {
-        //
+        $citys = CoreCity::all(); 
+        return view('branch.edit', compact('branch', 'citys'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(branch $branch)
+
+    public function update(CoreBranchRequest $request, $id)
     {
-        dd($branch->branch_id);
-        return view('branch.edit', compact('branch'));
+        $request->merge([
+            'branch_token' => $this->getToken(),
+            'data_state' => 0,
+            'updated_id' => '1'
+        ]);
+        if(CoreBranch::checkToken( $this->getToken())){
+            return redirect('/branch')->with('success', 'Data sudah diubah Sebelumnya !');            
+        };
+        CoreBranch::findOrFail($id)->update($request->all()) ?
+        $msg = 'Data berhasil Diubah !' :$msg = 'Data gagal diubah !';
+
+        return redirect('/branch')->with('success', $msg); 
+             
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function delete($id)
     {
-        //
-    }
+        $branch               = CoreBranch::findOrFail($id);
+        $branch->branch_token = $this->getToken();
+        $branch->data_state   = 1;
+        $branch->deleted_id   = '1';
+        $branch->deleted_at   = date("Y-m-d H:i:s");
+        if(CoreBranch::checkToken($this->getToken())){
+            return redirect('/branch')->with('success', 'Data sudah dihapus Sebelumnya !');            
+        };
+        $branch->save() ? $msg = 'Data Berhasil Dihapus !' : $msg = 'Data Gagal Dihapus !';
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect('/branch')->with('success',$msg);
     }
 }

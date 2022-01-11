@@ -24,11 +24,11 @@ class CoreBranchRequest extends FormRequest
     public function rules()
     {   
         return [
-                'branch_code' => ['required'], //unique
+                'branch_code' => ['required'], //unique 'unique:core_branch,branch_code,'. request()->branch
                 'branch_name' => ['required'],
                 'branch_address' => ['required'],
-                'branch_city' => ['required'],
-                'branch_contactperson' => ['required'],
+                'city_id' => ['required'],
+                'branch_contact_person' => ['required'],
                 'branch_email' => ['required', 'email'],
                 'branch_phone1' => ['required'],
                 'branch_phone2' => ['required'],
