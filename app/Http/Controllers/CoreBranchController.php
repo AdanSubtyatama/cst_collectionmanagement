@@ -15,15 +15,16 @@ class CoreBranchController extends Controller
     public function getToken(){
         return session()->get('branch_token');
     }
+   
     public function index()
     {
         $this->setToken();
-        $citys = CoreCity::get(); 
-        $branchs = CoreBranch::where('data_state', '0')->get();
-        return view('branch.branch', ['brancs' => $branchs, 'branch' => new CoreBranch, 'citys'=> $citys ]);
+        $core_city = CoreCity::get(); 
+        $core_branch = CoreBranch::where('data_state', '0')->get();
+        return view('branch.branch', ['core_branch' => $core_branch, 'core_branch_edit' => new CoreBranch, 'core_city'=> $core_city ]);
     }
 
-    public function store(CoreBranchRequest $request)
+    public function processAddBranch(CoreBranchRequest $request)
     {   
         $request->merge([
             'branch_token' => $this->getToken(),
@@ -38,14 +39,14 @@ class CoreBranchController extends Controller
         return redirect('/branch')->with('success', $msg);            
     }
 
-    public function edit(CoreBranch $branch)
+    public function editBranch(CoreBranch $core_branch_edit)
     {
-        $citys = CoreCity::all(); 
-        return view('branch.edit', compact('branch', 'citys'));
+        $core_city = CoreCity::all(); 
+        return view('branch.edit', compact('core_branch_edit', 'core_city'));
     }
 
 
-    public function update(CoreBranchRequest $request, $id)
+    public function processEditBranch(CoreBranchRequest $request, $branch_id)
     {
         $request->merge([
             'branch_token' => $this->getToken(),
@@ -55,16 +56,16 @@ class CoreBranchController extends Controller
         if(CoreBranch::checkToken( $this->getToken())){
             return redirect('/branch')->with('success', 'Data sudah diubah Sebelumnya !');            
         };
-        CoreBranch::findOrFail($id)->update($request->all()) ?
+        CoreBranch::findOrFail($branch_id)->update($request->all()) ?
         $msg = 'Data berhasil Diubah !' :$msg = 'Data gagal diubah !';
 
         return redirect('/branch')->with('success', $msg); 
              
     }
 
-    public function delete($id)
+    public function processDeleteBranch($branch_id)
     {
-        $branch               = CoreBranch::findOrFail($id);
+        $branch               = CoreBranch::findOrFail($branch_id);
         $branch->branch_token = $this->getToken();
         $branch->data_state   = 1;
         $branch->deleted_id   = '1';

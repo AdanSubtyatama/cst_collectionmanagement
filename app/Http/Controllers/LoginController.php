@@ -10,7 +10,7 @@ class LoginController extends Controller
     public function index(){
         return view('login.login');
     }
-    public function login(Request $request){
+    public function processLogin(Request $request){
         $request->validate([
             'username' => ['required'],
             'password' => ['required']

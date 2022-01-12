@@ -1,14 +1,20 @@
 <x-app title='Branch Page'>
     <div class="flex flex-row">
         @if (session()->has('success'))
-            <div class="col-6 p-2 alert alert-success" role="alert">
-                {{ session()->get('success') }}
-            </div>
+        <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+            {{ session()->get('success') }}
+            <button type="button" class="close p-1" data-dismiss="alert" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+           </div>
         @endif
         @foreach ($errors->all() as $error)
-            <div class="col-6 p-2 alert alert-danger" role="alert">
-                {{ $error }}
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show p-2" role="alert">
+            {{ $error }}
+            <button type="button" class="close p1" data-dismiss="alert" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+           </div>
         @endforeach
     </div>
     <div class="card bg-light mb-3">
@@ -37,22 +43,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($brancs as $index => $branchitem)
+                    @foreach ($core_branch as $index => $branch)
                         <tr>
                             <td>{{ $index }}</td>
-                            <td>{{ $branchitem->branch_code }}</td>
-                            <td>{{ $branchitem->branch_name }}</td>
-                            <td>{{ $branchitem->branch_address }}</td>
-                            <td>{{ $branchitem->city['city_name']  }}</td>
-                            <td>{{ $branchitem->branch_contact_person }}</td>
-                            <td>{{ $branchitem->branch_email }}</td>
-                            <td>{{ $branchitem->branch_phone1 }}</td>
+                            <td>{{ $branch->branch_code }}</td>
+                            <td>{{ $branch->branch_name }}</td>
+                            <td>{{ $branch->branch_address }}</td>
+                            <td>{{ $branch->city['city_name']  }}</td>
+                            <td>{{ $branch->branch_contact_person }}</td>
+                            <td>{{ $branch->branch_email }}</td>
+                            <td>{{ $branch->branch_phone1 }}</td>
                             <td style="min-width: 80px">
                                 <div class="row">
                                     <div class="col-12">
-                                        <a href="{{ route('corebranch.edit', $branchitem->branch_id) }}"
+                                        <a href="{{ route('edit-branch', $branch->branch_id) }}"
                                             class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                                        <a onclick="return confirm('Anda yakin ingin menghapus data ini ?')" href="{{ route('corebranch.delete', $branchitem->branch_id) }}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                                        <a onclick="return confirm('Anda yakin ingin menghapus data ini ?')" href="{{ route('process-delete-branch', $branch->branch_id) }}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
                                     </div>
                                 </div>
                             </td>
@@ -68,7 +74,7 @@
 
 <div class="modal fade" id="addDataBranch" tabindex="-1" aria-labelledby="addDataBranchLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form action="{{ route('corebranch.store') }}" method="POST">
+        <form action="{{ route('process-add-branch') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
@@ -90,14 +96,6 @@
 </div>
 </div>
 
-<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" defer></script>
-<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js" defer></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js" defer></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js" defer></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js" defer></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js" defer></script>
 <script>
     $(document).ready(function() {
         $('#example').DataTable({

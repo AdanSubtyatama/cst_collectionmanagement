@@ -17,21 +17,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'username',
-        'database',
-        'user_name',
-        'user_group_id',
-        'location_id',
-        'branch_id',
-        'branch_status',
-        'branch_status',
-        'section_id',
-        'user_level',
-        'approve',
-        'data_state',
+    protected $table = 'system_user';
+    protected $primaryKey   = 'user_id';
+    public $timestamps = false;
+    protected $guarded = [
+        'user_id',
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -41,12 +32,11 @@ class User extends Authenticatable
         'password',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function branch(){
+        return $this->belongsTo(CoreBranch::class, 'branch_id');
+    }
+    public function user_group(){
+        return $this->belongsTo(SystemUserGroup::class, 'user_group_id');
+    }
+    
 }

@@ -9,19 +9,19 @@ class CoreBusinessCollectorController extends Controller
 {
 
     public function setToken(){
-        session()->put('businessCollector_token', md5(date("YmdHis")));
+        session()->put('business_collection_token', md5(date("YmdHis")));
     }
     public function getToken(){
-        return session()->get('businessCollector_token');
+        return session()->get('business_collection_token');
     }
     public function index()
     {
         $this->setToken();
-        $businessCollectors = CoreBusinessCollector::where('data_state', '0')->get();
-        return view('BusinessCollector.BusinessCollector', ['businessCollectors' => $businessCollectors, 'businessCollector' => new CoreBusinessCollector]);
+        $core_business_collector = CoreBusinessCollector::where('data_state', '0')->get();
+        return view('businessCollector.businessCollector', ['core_business_collector' => $core_business_collector, 'core_business_collector_edit' => new CoreBusinessCollector]);
     }
 
-    public function store(CoreBusinessCollectorRequest $request)
+    public function processAddBusinessCollector(CoreBusinessCollectorRequest $request)
     {   
         $request->merge([
             'business_collection_token' => $this->getToken(),
@@ -29,20 +29,20 @@ class CoreBusinessCollectorController extends Controller
             'created_id' => '1'
         ]);
         if(CoreBusinessCollector::checkToken( $this->getToken())){
-            return redirect('/businessCollector')->with('success', 'Data ditambahkan Sebelumnya !');            
+            return redirect('/business-collector')->with('success', 'Data ditambahkan Sebelumnya !');            
         };
         CoreBusinessCollector::create($request->all()) ? $msg = 'Data Berhasil Ditambahkan !' : $msg = 'Data gagal Ditambahkan !';
         
-        return redirect('/businessCollector')->with('success', $msg);            
+        return redirect('/business-collector')->with('success', $msg);            
     }
 
-    public function edit(CoreBusinessCollector $businessCollector)
+    public function editBusinessCollector(CoreBusinessCollector $core_business_collector_edit)
     {
-        return view('businessCollector.edit', compact('businessCollector'));
+        return view('businessCollector.edit', compact('core_business_collector_edit'));
     }
 
 
-    public function update(CoreBusinessCollectorRequest $request, $id)
+    public function processEditBusinessCollector(CoreBusinessCollectorRequest $request, $business_collector_id)
     {
         $request->merge([
             'business_collection_token' => $this->getToken(),
@@ -50,23 +50,23 @@ class CoreBusinessCollectorController extends Controller
             'updated_id' => '1'
         ]);
         if(CoreBusinessCollector::checkToken( $this->getToken())){
-            return redirect('/businessCollector')->with('success', 'Data sudah diubah Sebelumnya !');            
+            return redirect('/core_business_collector')->with('success', 'Data sudah diubah Sebelumnya !');            
         };
-        CoreBusinessCollector::find($id)->update($request->all()) ?
+        CoreBusinessCollector::find($business_collector_id)->update($request->all()) ?
         $msg = 'Data berhasil Diubah !' :$msg = 'Data gagal diubah !';
-        return redirect('/businessCollector')->with('success', $msg); 
+        return redirect('/business-collector')->with('success', $msg); 
              
     }
 
-    public function delete($id)
+    public function processDeleteBusinessCollector($business_collector_id)
     {
-        $businessCollector               = CoreBusinessCollector::findOrFail($id);
-        $businessCollector->business_collection_token = $this->getToken();
-        $businessCollector->data_state   = 1;
-        $businessCollector->deleted_id   = '1';
-        $businessCollector->deleted_at   = date("Y-m-d H:i:s");
-        $businessCollector->save() ? $msg = 'Data Berhasil Dihapus !' : $msg = 'Data Gagal Dihapus !';
+        $business_collector               = CoreBusinessCollector::findOrFail($business_collector_id);
+        $business_collector->business_collection_token = $this->getToken();
+        $business_collector->data_state   = 1;
+        $business_collector->deleted_id   = '1';
+        $business_collector->deleted_at   = date("Y-m-d H:i:s");
+        $business_collector->save() ? $msg = 'Data Berhasil Dihapus !' : $msg = 'Data Gagal Dihapus !';
 
-        return redirect('/businessCollector')->with('success',$msg);
+        return redirect('/business-collector')->with('success',$msg);
     }
 }

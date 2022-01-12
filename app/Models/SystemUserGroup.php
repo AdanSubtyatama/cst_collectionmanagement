@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class SystemUserGroup extends Model
 {
     use HasFactory;
+    protected $table = 'system_user_group';
+    protected $primaryKey   = 'user_group_id';
+    
+    protected $guarded = [
+        'user_group_id',
+    ];
 }
