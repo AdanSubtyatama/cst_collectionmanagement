@@ -29,10 +29,16 @@ class SystemUserController extends Controller
             $file = $request->avatar;
             $filename = 'a-' . $request->user_id.'.'.$file->extension();
             $file->move(public_path('img/avatar'), $filename);
+            dd($filename);
+            $request->merge([
+                'avatar' => $filename
+            ]);
+            
         }else{
-            $request->avatar = 'default.png';
+            $request->merge([
+                'avatar' => 'default.png'
+            ]);
         }
-
         $request->merge([
             'data_state' => 0,
             'log_stat' => 'off',
@@ -60,6 +66,10 @@ class SystemUserController extends Controller
             $file = $request->avatar;
             $filename = 'a-' . $user_id.'.'.$file->extension();
             $file->move(public_path('img/avatar'), $filename);
+            $request->merge([
+                'avatar' => $filename
+            ]);
+
         }else{
             $request->request->remove('avatar');
         }

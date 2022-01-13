@@ -7,6 +7,10 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
     public function index(){
         return view('login.login');
     }
@@ -16,15 +20,13 @@ class LoginController extends Controller
             'password' => ['required']
         ]);
 
-        if (auth()->attempt(['email' => $request->username, 'password' => $request->password])) {
-            if (auth()->user()->role_id == 'superadmin') {
-                return redirect('/dashboard')->with('success', 'You are now logged in !');
-            }
-            return redirect('/masjid')->with('success', 'You are now logged in !');
+        if (auth()->attempt(['username' => $request->username, 'password' => $request->password])) {
+            return redirect('/')->with('success', 'You are now logged in !');
         }
 
         throw ValidationException::withMessages([
-            'email' => 'Your account credentials does not match our records. Please check your Email or Password !'
+            'username' => 'Your account credentials does not match our records. Please check your Username or Password !'
         ]);
     }
+
 }

@@ -32,6 +32,14 @@
                </button>
                </div>
               @endforeach
+              @if (session()->has('error'))
+              <div class="alert alert-danger alert-dismissible fade show p-2" role="alert">
+                  {{ session()->get('error') }}
+                  <button type="button" class="close p-1" data-dismiss="alert" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                 </button>
+                 </div>
+              @endif
               <div class="card-body">
                 <form action="{{ route('process-login') }}" method="POST" class="needs-validation">
                     @csrf
