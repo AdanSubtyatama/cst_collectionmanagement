@@ -10,6 +10,7 @@ class SystemUserGroup extends Model
     use HasFactory;
     protected $table = 'system_user_group';
     protected $primaryKey   = 'user_group_id';
+    public $timestamps = false;
     
     protected $guarded = [
         'user_group_id',

@@ -7,6 +7,7 @@ use App\Models\CoreBranch;
 use App\Models\SystemUserGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 
 class SystemUserController extends Controller
@@ -21,30 +22,32 @@ class SystemUserController extends Controller
     }
 
     public function processAddUser (SystemUserRequest $request)
-    {
+    {   
+        $request->validate([
+            'username' => 'unique:system_user,username'
+        ]);
+        $dataAddUser = [
+            'username' => $request->username,
+            'user_name' => $request->user_name,
+            'user_group_id' => $request->user_group_id,
+            'branch_id' => $request->branch_id,
+            'branch_id' => $request->branch_id,
+            'data_state' => 0,
+            'log_stat' => 'off',
+            'password' => Hash::make($request->password),
+            'avatar' => 'default.png'
+           ];
         if($request->avatar != "") {
             $request->validate([
                 'avatar' => 'image|max:2048|mimes:png,jpg,jpeg',
             ]);
             $file = $request->avatar;
-            $filename = 'a-' . $request->user_id.'.'.$file->extension();
+            $filename = 'a-' . $request->username.'.'.$file->extension();
             $file->move(public_path('img/avatar'), $filename);
-            dd($filename);
-            $request->merge([
-                'avatar' => $filename
-            ]);
-            
-        }else{
-            $request->merge([
-                'avatar' => 'default.png'
-            ]);
+            $dataAddUser['avatar'] = $filename;
         }
-        $request->merge([
-            'data_state' => 0,
-            'log_stat' => 'off',
-            'password' => Hash::make($request->password)
-        ]);
-        User::create($request->all()) ?  $msg = 'Tambah System User Berhasil' :  $msg = 'Tambah System User Gagal';;
+       
+        User::create($dataAddUser) ?  $msg = 'Tambah System User Berhasil' :  $msg = 'Tambah System User Gagal';;
        
         return redirect('/user')->with('success',$msg);
     }
@@ -57,27 +60,33 @@ class SystemUserController extends Controller
     }
 
     public function processEditUser(SystemUserRequest $request, $user_id)
-    {
+    {   
+        $request->validate([
+            'username' => 'unique:system_user,username' .$user_id,
+        ]);
+       $dataEditUser = [
+        'username' => $request->username,
+        'user_name' => $request->user_name,
+        'user_group_id' => $request->user_group_id,
+        'branch_id' => $request->branch_id,
+        'branch_id' => $request->branch_id,
+        'data_state' => 0,
+        'log_stat' => 'off',
+       ];
         $request->request->remove('password');
         if($request->avatar != "") {
             $request->validate([
                 'avatar' => 'image|max:2048|mimes:png,jpg,jpeg',
             ]);
             $file = $request->avatar;
-            $filename = 'a-' . $user_id.'.'.$file->extension();
+            $filename = 'a-' . $request->username.'.'.$file->extension();
             $file->move(public_path('img/avatar'), $filename);
-            $request->merge([
-                'avatar' => $filename
-            ]);
+            $dataEditUser['avatar'] = $filename;
 
-        }else{
-            $request->request->remove('avatar');
         }
-        $request->merge([
-            'data_state' => 0,
-            'log_stat' => 'off',
-        ]);
-        User::findOrFail($user_id)->update($request->all()) ?  $msg = 'Update User Berhasil' :  $msg = 'Update User Gagal';;
+       
+
+        User::findOrFail($user_id)->update($dataEditUser) ?  $msg = 'Update User Berhasil' :  $msg = 'Update User Gagal';;
        
         return redirect('/user')->with('success',$msg);
     }

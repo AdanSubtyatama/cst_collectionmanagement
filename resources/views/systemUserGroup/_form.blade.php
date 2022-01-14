@@ -1,105 +1,59 @@
+
 <div class="form-row">
     <div class="col-md-6 mb-3">
-        <label for="username">Username</label>
-        <input placeholder="Masukan Username..."
-            value="{{ old('username') ?? $system_user_edit->username }}" type="text"
-            name="username"
-            class="form-control @error('username')
+        <label for="user_group_level">User Group Level</label>
+        <input placeholder="Masukan User Group Level..."
+            value="{{ old('user_group_level') ?? $system_user_group_edit->user_group_level }}" type="text"
+            name="user_group_level"
+            class="form-control @error('user_group_level')
         is-invalid
     @enderror"
-            id="username" required>
+            id="user_group_level" required>
         <div class="invalid-feedback">
-            @error('username')
+            @error('user_group_level')
                 {{ $message }}
             @enderror
         </div>
     </div>
     <div class="col-md-6 mb-3">
-        <label for="user_name">Nama User</label>
-        <input placeholder="Masukan Nama User..." value="{{ old('user_name') ?? $system_user_edit->user_name }}"
-            type="text" name="user_name"
-            class="form-control @error('user_name')
+        <label for="user_group_name">Nama User Group Name</label>
+        <input placeholder="Masukan Nama User Group Name..." value="{{ old('user_group_name') ?? $system_user_group_edit->user_group_name }}"
+            type="text" name="user_group_name"
+            class="form-control @error('user_group_name')
         is-invalid
-    @enderror" id="user_name" value=""
+    @enderror" id="user_group_name" value=""
             required>
         <div class="invalid-feedback">
-            @error('user_name')
+            @error('user_group_name')
                 {{ $message }}
             @enderror
         </div>
     </div>
 </div>
-<div class="form-row">
-    <div class="col-md-6 mb-3">
-        <label for="password">Password</label>
-        <input placeholder="Masukan Password..." {{ $system_user_edit->password != null ? 'disable readonly' : ' ' }}
-            value="{{ $system_user_edit->password }}" type="password"
-            name="password"
-            class="form-control @error('password')
-             is-invalid
-            @enderror"
-            id="password" required>
-        <div class="invalid-feedback">
-            @error('password')
-                {{ $message }}
-            @enderror
-        </div>
-    </div>
-    <div class="col-md-6 mb-3">
-        <label for="user_group_id">User Group </label>
-        <select
-            class="custom-select @error('user_group_id')
-        is-invalid
-    @enderror"
-            id="user_group_id" name="user_group_id" required>
-            <option selected value="{{ $system_user_edit->user_group ? $system_user_edit->user_group->user_group_id : '' }}">{{ $system_user_edit->user_group ? $system_user_edit->user_group->user_group_name : 'Pilih User Group' }}</option>
-            @foreach ($system_user_group as $user_group )
-                <option value="{{ $user_group->user_group_id }}">{{ $user_group->user_group_name }}</option>                
-            @endforeach
-        </select>
-        <div class="invalid-feedback">
-            @error('user_group_id')
-                {{ $message }}
-            @enderror
+@foreach ( $system_menu as $menu)
+
+<div class="form-row my-0">
+    <div class="col-md-6 " style="margin-left:{{ strlen($menu->id_menu)*2 }}%">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <div class="input-group-text">
+                <input type="checkbox"
+                @if($system_user_group_edit->user_group_id)
+                    @foreach ($system_menu_checklist as $menu_checklist)
+                        @if ($menu_checklist->id_menu == $menu->id_menu)
+                        checked
+                        @endif
+                    @endforeach   
+                @endif         
+                name="id_menu[]" aria-label="{{ $menu->text }}" value="{{ $menu->id_menu }}">
+            </div>
+            </div>
+            <input type="text" class="form-control" readonly disabled aria-label="{{ $menu->text }}" value="{{ $menu->text }}">
         </div>
     </div>
 </div>
-<div class="form-row">
-    <div class="col-md-6 mb-3">
-        <label for="branch_id">Masukan Avatar</label>
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" name="avatar" id="avatar">
-            <label class="custom-file-label" for="avatar">Pilih file Avatar</label>
-          </div>
-        <div class="invalid-feedback">
-            @error('avatar')
-                {{ $message }}
-            @enderror
-        </div>
-    </div>
-    <div class="col-md-6 mb-3">
-        <label for="branch_id">Pilih Cabang </label>
-        <select
-            class="custom-select @error('branch_id')
-        is-invalid
-    @enderror"
-            id="branch_id" name="branch_id" required>
-            <option selected value="{{ $system_user_edit->branch ? $system_user_edit->branch->branch_id : '' }}">{{ $system_user_edit->branch ? $system_user_edit->branch->branch_name : 'Pilih Cabang' }}</option>
-            @foreach ($core_branch as $branch )
-                <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>                
-            @endforeach
-        </select>
-        <div class="invalid-feedback">
-            @error('user_group_id')
-                {{ $message }}
-            @enderror
-        </div>
-    </div>
-</div>
+    
+@endforeach
 <script>
-document.querySelector('.custom-file-input').addEventListener('change',function(e){
-  var fileName = document.getElementById("avatar").files[0].name;
-  var nextSibling = e.target.nextElementSibling
-  nextSibling.innerText = fileName
-})
+    //validasi menu group
 </script>

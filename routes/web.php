@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 Route::post('logout', LogoutController::class)->name('logout');
 
 // Dashboard Route
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // System User Route
 Route::get('/user', [SystemUserController::class, 'index'])->name('user');

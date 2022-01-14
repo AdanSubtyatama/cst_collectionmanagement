@@ -26,6 +26,7 @@ class SystemUserGroupRequest extends FormRequest
         return [
             'user_group_level'   => 'required',
             'user_group_name'    => 'required',
+            'id_menu'
         ];
     }
 }

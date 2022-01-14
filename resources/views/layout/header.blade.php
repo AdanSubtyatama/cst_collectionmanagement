@@ -11,7 +11,7 @@
     <ul class="navbar-nav navbar-right">
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="pp" src="{{ asset(auth()->user()->avatar) }}" class="rounded-circle mr-1">
+                <img alt="FotoProfile" style="min-height: 25px" src="{{ asset('img/avatar/'.auth()->user()->avatar) }}" class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">{{ auth()->user()->user_name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
@@ -29,7 +29,7 @@
                 <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="dropdown-item has-icon text-danger">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                     <i class="fas fa-sign-out-alt mt-2"></i> Logout
                 </button>
                 </form>
                 

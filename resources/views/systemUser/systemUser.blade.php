@@ -48,7 +48,7 @@
                             <td>{{ $user->user_name }}</td>
                             <td>{{ $user->branch->branch_name }}</td>
                             <td>{{ $user->user_group->user_group_name }}</td>
-                            <td>{!! $user->log_stat = 'off' ? '<span class="badge badge-info">Off</span>' : '<span class="badge badge-secondary">On</span>'!!}</td>
+                            <td>{!! $user->log_stat == 'off' ? '<span class="badge badge-info">Off</span>' : '<span class="badge badge-success">On</span>'!!}</td>
                             <td style="min-width: 80px">
                                 <div class="row">
                                     <div class="col-12">

@@ -24,6 +24,14 @@
 
             <div class="card card-primary">
               <div class="card-header"><h4>Login</h4></div>
+              @if (session()->has('success'))
+                <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+                    {{ session()->get('success') }}
+                    <button type="button" class="close p-1" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+                @endif
               @foreach ($errors->all() as $error)
               <div class="alert alert-danger alert-dismissible fade show p-2" role="alert">
                 {{ $error }}

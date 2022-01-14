@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class SystemMenuMapping extends Model
 {
  
-    protected $table = 'system_user_mapping';
+    protected $table = 'system_menu_mapping';
     protected $primaryKey   = 'id_menu_mapping';
-    
+    public $timestamps = false;
+
     protected $guarded = [
         'id_menu_mapping',
     ];
