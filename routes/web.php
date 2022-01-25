@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AcctCreditsAccountController;
+use App\Http\Controllers\AcctCreditsAgunanController;
+use App\Http\Controllers\AcctCreditsController;
+use App\Http\Controllers\AcctSourceFundController;
 use App\Http\Controllers\CoreBranchController;
 use App\Http\Controllers\CoreBusinessCollectorController;
 use App\Http\Controllers\CoreBusinessOfficerController;
@@ -8,6 +12,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\SystemUserController;
 use App\Http\Controllers\SystemUserGroupController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +30,14 @@ Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login/process-login', [LoginController::class, 'processLogin'])->name('process-login');
 
 Route::middleware('auth')->group(function () {
+
+    // Credits Route
+Route::get('/credits', [AcctCreditsController::class, 'index'])->name('credits');
+Route::post('/credits/process-add', [AcctCreditsController::class, 'processAddCredits'])->name('process-add-credits');
+Route::get('/credits/edit/{acct_credits_edit}', [AcctCreditsController::class, 'editCredits'])->name('edit-credits');
+Route::post('/credits/process-edit/{acct_credits_id}', [AcctCreditsController::class, 'processEditCredits'])->name('process-edit-credits');
+Route::post('/credits/process-delete/{acct_credits_id}', [AcctCreditsController::class, 'processDeleteCredits'])->name('process-delete-credits');
+
 
 Route::post('logout', LogoutController::class)->name('logout');
 
@@ -67,5 +80,24 @@ Route::post('/business-officer/process-add', [CoreBusinessOfficerController::cla
 Route::get('/business-officer/edit/{core_business_officer_edit}', [CoreBusinessOfficerController::class, 'editBusinessOfficer'])->name('edit-business-officer');
 Route::post('/business-officer/process-edit/{business_officer_id}', [CoreBusinessOfficerController::class, 'processEditBusinessOfficer'])->name('process-edit-business-officer');
 Route::get('/business-officer/process-delete/{business_officer_id}', [CoreBusinessOfficerController::class, 'processDeleteBusinessOfficer'])->name('process-delete-business-officer');
+
+// SourceFund Route
+Route::get('/source-fund', [AcctSourceFundController::class, 'index'])->name('source-fund');
+Route::post('/source-fund/process-add', [AcctSourceFundController::class, 'processAddSourceFund'])->name('process-add-source-fund');
+Route::get('/source-fund/edit/{acct_source_fund_edit}', [AcctSourceFundController::class, 'editSourceFund'])->name('edit-source-fund');
+Route::post('/source-fund/process-edit/{source_fund_id}', [AcctSourceFundController::class, 'processEditSourceFund'])->name('process-edit-source-fund');
+Route::post('/source-fund/process-delete/{source_fund_id}', [AcctSourceFundController::class, 'processDeleteSourceFund'])->name('process-delete-source-fund');
+
+// Credits Account Route
+Route::get('/credits-account', [AcctCreditsAccountController::class, 'index'])->name('credits-account');
+Route::post('/credits-account/process-add', [AcctCreditsAccountController::class, 'processAddCreditsAccount'])->name('process-add-credits-account');
+Route::get('/credits-account/edit/{acct_credits_account_edit}', [AcctCreditsAccountController::class, 'editCreditsAccount'])->name('edit-credits-account');
+Route::post('/credits-account/process-edit/{credits_account_id}', [AcctCreditsAccountController::class, 'processEditCreditsAccount'])->name('process-edit-credits-account');
+Route::post('/credits-account/process-delete/{credits_account_id}', [AcctCreditsAccountController::class, 'processDeleteCreditsAccount'])->name('process-delete-credits-account');
+Route::get('/credits-account/get-city/{province_id}', [AcctCreditsAccountController::class, 'getCityfromProvince'])->name('get-city-credits-account');
+Route::get('/credits-account/get-kecamatan/{city_id}', [AcctCreditsAccountController::class, 'getKecamatanfromProvince'])->name('get-kecamatan-credits-account');
+
+// Credits Account Agunan credits-account-agunan
+Route::get('/credits-agunan', [AcctCreditsAgunanController::class, 'index'])->name('credits-agunan');
 
 });

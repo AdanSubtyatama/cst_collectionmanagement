@@ -91,7 +91,7 @@ $(function() {
       $(".main-sidebar .sidebar-menu li a.has-dropdown").off('click').on('click', function() {
         var me     = $(this);
         var active = false;
-        if(me.parent().hasClass("active")){
+        if(me.hasClass("active")){
           active = true;
         }
 
@@ -103,13 +103,13 @@ $(function() {
         $('.main-sidebar .sidebar-menu li.active').removeClass('active');
 
         if(active==true) {
-          me.parent().removeClass('active');
+          me.removeClass('active');
           me.parent().find('> .dropdown-menu').slideUp(500, function() {
             update_sidebar_nicescroll();
             return false;
           });
         }else{
-          me.parent().addClass('active');
+          me.addClass('active');
           me.parent().find('> .dropdown-menu').slideDown(500, function() {
             update_sidebar_nicescroll();
             return false;
