@@ -18,7 +18,7 @@
             <form action="{{ route('process-edit-credits-account',$acct_credits_account_edit->credits_account_id) }}" method="POST">
                 @csrf
                 @include('creditsAccount._form')
-                <button type="submit" value="" name="editDataCreditsAccount" class="btn btn-primary">Save changes</button>
+                <input type="submit" value="Save changes" name="editDataCreditsAccount" class="btn btn-primary" >
             </form>
         </div>
     </div>
@@ -81,4 +81,5 @@
         let due_date_temp   = dd + '/' + mm + '/' + yyyy;
         $('#credits_account_due_date').val(due_date_temp);
     })
+   
 </script>

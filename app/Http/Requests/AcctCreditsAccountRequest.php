@@ -42,6 +42,9 @@ class AcctCreditsAccountRequest extends FormRequest
                 'credits_account_payment_amount' => ['required'],
                 'credits_account_last_balance' => ['required'],
                 'credits_account_payment_to' => ['required'],
+                'credits_account_interest_amount' => ['required'],
+                'credits_account_interest' => ['required'],
+                'credits_account_accumulated_fines' => ['required'],
                 
                 // 'credits_account_payment_date' => ['required'],
                 // 'credits_account_payment_date_last' => ['required'],

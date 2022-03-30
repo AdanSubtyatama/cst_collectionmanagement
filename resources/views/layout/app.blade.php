@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
-<body class="sidebar-mini">
+<body >{{-- class="sidebar-mini" --}}
     <div id="app">
         <div class="main-wrapper">
            @include('layout.header');

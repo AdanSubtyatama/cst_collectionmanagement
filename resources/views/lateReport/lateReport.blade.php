@@ -1,4 +1,4 @@
-<x-app title='Credits Account Page'>
+<x-app title='Laporan Keterlambatan'>
     <div class="flex flex-row">
         @if (session()->has('success'))
         <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
@@ -18,19 +18,10 @@
         @endforeach
     </div>
     <div class="card bg-light mb-3">
-        <div class="card-header flex-row">
-            <div class="row">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addCreditsAccount">
-                    Tambah Data
-                </button> 
-                <button type="button" class="btn btn-success btn-sm ml-2"  data-toggle="modal" data-target="#importExcel">
-                    Insert Database
-                </button>
-            </div>
-        </div>
+        
         <div class="card-body overflow-auto">
-            <h5 class="card-title">Data Akun Kredit</h5>
-            <form class="my-5" action="{{ route('filter-credits-account') }}" method="POST">
+            <h5 class="card-title">Data Pinjaman Yang Terlambat</h5>
+            <form class="my-5" action="{{ route('filter-late-report') }}" method="POST">
                 @method('post')
                 @csrf
                 <div class="form-row mt-5">
@@ -96,11 +87,56 @@
                             @endforeach
                         </select>
                     </div>
+                    
                 </div>
-
+                <div class="form-row ">
+                    <div class="col-md-3 mb-3">
+                        <label for="collectibility">Kolektibilitas </label>
+                        <select class="custom-select @error('collectibility')
+                        is-invalid
+                    @enderror" id="collectibility"
+                            name="collectibility">
+                            <?php if($collectibility_id == ''){?>
+                                <option value="" selected>Pilih Status Kollektibilitas</option>    
+                            <?php }?>
+                            @foreach ($preference_collectibility as $collectibility)
+                                <option value="{{ $collectibility->collectibility_id }}" {{ ($collectibility->collectibility_id == $collectibility_id) ? 'selected' : '' }}>{{ $collectibility->collectibility_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="business_collector_id">Business Collector </label>
+                        <select class="custom-select @error('business_collector_id')
+                        is-invalid
+                    @enderror" id="business_collector_id"
+                            name="business_collector_id">
+                            <?php if($business_collector_id == ''){?>
+                                <option value="" selected>Pilih Business Collector</option>    
+                            <?php }?>
+                            @foreach ($core_business_collector as $business_collector)
+                                <option value="{{ $business_collector->business_collector_id }} {{ ($business_collector->business_collector_id == $business_collector_id) ? 'selected' : '' }}">{{ $business_collector->business_collector_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="business_officer_id">Business Officer </label>
+                        <select class="custom-select @error('business_officer_id')
+                        is-invalid
+                    @enderror" id="business_officer_id"
+                            name="business_officer_id">
+                            <?php if($business_officer_id == ''){?>
+                                <option value="" selected>Pilih Business Officer</option>    
+                            <?php }?>
+                            @foreach ($core_business_officer as $business_officer)
+                                <option value="{{ $business_officer->business_officer_id }} {{ ($business_officer->business_officer_id == $business_officer_id) ? 'selected' : '' }}">{{ $business_officer->business_officer_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                
                 <div class="row">
                     <div class="col-12 text-right">
-                        <a type="button" href="{{ url('/credits-account') }}" class="btn btn-secondary mr-2">Batal</a> 
+                        <a type="button" href="{{ url('/late-report') }}" class="btn btn-secondary mr-2">Batal</a> 
                         <button type="submit" value="" name="cari" class="btn btn-primary">Cari</button>
                     </div>
                 </div>
@@ -109,44 +145,47 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>No Akun</th>
-                        <th>Nama Akun</th>
-                        <th>Alamat Akun</th>
+                        <th>Nama Peminjam</th>
+                        <th>Alamat Peminjam</th>
                         <th>Jenis Pinjaman</th>
-                        <th>Jenis Sumber Dana</th>
                         <th>Tanggal Pinjaman</th>
-                        <th>Status Pinjaman</th>
-                        <th>Periode Pinjaman</th>
+                        <th>Jatuh Tempo Terakhir</th>
                         <th>Jatuh Tempo</th>
+                        <th>Kolektibilitas</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($acct_credits_account as $index => $credits_account)
                         <tr>
-                            <td>{{ $index }}</td>
-                            <td>{{ $credits_account->credits_account_no }}</td>
+                            <td>{{ $index+1 }}</td>
                             <td>{{ $credits_account->credits_account_name }}</td>
                             <td>{{ $credits_account->credits_account_address }}</td>
                             <td>{{ $credits_account->credits['credits_name']  }}</td>
-                            <td>{{ $credits_account->source_fund['source_fund_name'] }}</td>
                             <td>{{ $credits_account->credits_account_date }}</td>
-                            <td>{{ $credits_account->credits_account_collection_status }}</td>
-                            <td>{{ $credits_account->credits_account_period }}</td>
                             <td>{{ $credits_account->credits_account_due_date }}</td>
-                            <td style="min-width: 80px">
-                                <div class="row">
-                                    <div class="col-6 m-0 pl-2">
-                                        <a href="{{ route('edit-credits-account', $credits_account->credits_account_id) }}"
-                                            class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                                    </div>    
-                                    <div class="col-6 m-0 p-0">    
-                                        <form action="{{ route('process-delete-credits-account', $credits_account->credits_account_id) }}" method="POST">
-                                            @csrf
-                                            <button onclick="return confirm('Anda yakin ingin menghapus data ini ?')" class="btn btn-sm btn-danger" type="submit" ><i class="fas fa-trash"></i></button>
-                                        </form>
-                                    </div>
-                                </div>
+                            <td>{{ $credits_account->credits_account_payment_date }}</td>
+                            <td>
+                                <span class="btn 
+                                @if($credits_account->collectibility_name == 'LANCAR')
+                                btn-success
+                                @elseif ($credits_account->collectibility_name == 'KURANG LANCAR')
+                                btn-warning 
+                                @else
+                                btn-danger
+                                @endif
+                                ">
+                                
+                                {{ $credits_account->collectibility_name }}</span></td>
+                            <td style="min-width: 100px" >                                
+                                <a href="{{ url('/late-report/print-st', $credits_account->credits_account_id) }}"
+                                    class="btn btn-sm btn-primary mb-1"><i class="fas fa-print"></i> ST</a>  
+                                <a href="{{ url('/late-report/print-sp1', $credits_account->credits_account_id) }}"
+                                    class="btn btn-sm btn-primary mb-1"><i class="fas fa-print"></i> SP 1</a>  
+                                <a href="{{ url('/late-report/print-sp2', $credits_account->credits_account_id) }}"
+                                    class="btn btn-sm btn-primary mb-1"><i class="fas fa-print"></i> SP 2</a>  
+                                <a href="{{ url('/late-report/print-sp3', $credits_account->credits_account_id) }}"
+                                    class="btn btn-sm btn-primary mb-1"><i class="fas fa-print"></i> SP 3</a>  
                             </td>
                         </tr>
                     @endforeach
@@ -158,59 +197,13 @@
     {{-- modal tambah --}}
 </x-app>
 
-<div class="modal fade" id="addCreditsAccount" tabindex="-1" aria-labelledby="addCreditsAccountLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <form action="{{ route('process-add-credits-account') }}" method="POST">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addCreditsAccountLabel">Add Data Akun Kredit</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @include('creditsAccount._form')
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" value="" name="addCreditsAccount" class="btn btn-primary">Save changes</button>
-                </div>
-        </form>
-
-    </div>
-</div>
-</div>
-
-<div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form method="post" action="{{ route('process-import-excel') }}" enctype="multipart/form-data">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>
-                </div>
-                <div class="modal-body">
-
-                    {{ csrf_field() }}
-
-                    <label>Pilih file excel</label>
-                    <div class="form-group">
-                        <input type="file" name="file" required="required">
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Import</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 <script>
     $(document).ready(function() {
         $('#example').DataTable();
         $('#credits_id').select2();
         $('#branch_id').select2();
+        $('#business_collector_id').select2();
+        $('#business_officer_id').select2();
+        $('#collectibility').select2();
     });
 </script>

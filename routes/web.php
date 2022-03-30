@@ -1,15 +1,19 @@
 <?php
 
+use App\Http\Controllers\AcctBusinessCollectorReportController;
 use App\Http\Controllers\AcctCreditsAccountController;
 use App\Http\Controllers\AcctCreditsAgunanController;
 use App\Http\Controllers\AcctCreditsController;
 use App\Http\Controllers\AcctSourceFundController;
+use App\Http\Controllers\CollectibiltyCreditsAccountController;
 use App\Http\Controllers\CoreBranchController;
 use App\Http\Controllers\CoreBusinessCollectorController;
 use App\Http\Controllers\CoreBusinessOfficerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LateReportsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\PreferenceCollectibilityController;
 use App\Http\Controllers\SystemUserController;
 use App\Http\Controllers\SystemUserGroupController;
 
@@ -91,13 +95,46 @@ Route::post('/source-fund/process-delete/{source_fund_id}', [AcctSourceFundContr
 // Credits Account Route
 Route::get('/credits-account', [AcctCreditsAccountController::class, 'index'])->name('credits-account');
 Route::post('/credits-account/process-add', [AcctCreditsAccountController::class, 'processAddCreditsAccount'])->name('process-add-credits-account');
+Route::post('/credits-account/process-import-excel', [AcctCreditsAccountController::class, 'processImportExcelCreditsAccount'])->name('process-import-excel');
 Route::get('/credits-account/edit/{acct_credits_account_edit}', [AcctCreditsAccountController::class, 'editCreditsAccount'])->name('edit-credits-account');
 Route::post('/credits-account/process-edit/{credits_account_id}', [AcctCreditsAccountController::class, 'processEditCreditsAccount'])->name('process-edit-credits-account');
+Route::post('/credits-account/filter-credits-account', [AcctCreditsAccountController::class, 'filterCreditsAccount'])->name('filter-credits-account');
 Route::post('/credits-account/process-delete/{credits_account_id}', [AcctCreditsAccountController::class, 'processDeleteCreditsAccount'])->name('process-delete-credits-account');
 Route::get('/credits-account/get-city/{province_id}', [AcctCreditsAccountController::class, 'getCityfromProvince'])->name('get-city-credits-account');
 Route::get('/credits-account/get-kecamatan/{city_id}', [AcctCreditsAccountController::class, 'getKecamatanfromProvince'])->name('get-kecamatan-credits-account');
 
-// Credits Account Agunan credits-account-agunan
+// Credits Account Report Late
+Route::get('/late-report', [LateReportsController::class, 'index'])->name('late-report');
+Route::post('/late-report/filter-late-report', [LateReportsController::class, 'filterLateReports'])->name('filter-late-report');
+Route::get('/late-report/print-st/{credits_account_edit}', [LateReportsController::class, 'printLateReportsST'])->name('print-st');
+Route::get('/late-report/print-sp1/{credits_account_edit}', [LateReportsController::class, 'printLateReportsSP1'])->name('print-st');
+Route::get('/late-report/print-sp2/{credits_account_edit}', [LateReportsController::class, 'printLateReportsSP2'])->name('print-st');
+Route::get('/late-report/print-sp3/{credits_account_edit}', [LateReportsController::class, 'printLateReportsSP3'])->name('print-st');
+
+// Credits Account Agunan credits-account-agunan 
 Route::get('/credits-agunan', [AcctCreditsAgunanController::class, 'index'])->name('credits-agunan');
+Route::post('/credits-agunan/process-add-temp-bpkb', [AcctCreditsAgunanController::class, 'processAddTempCreditsAgunanBPKB'])->name('process-add-temp-credits-agunan-bpkb');
+Route::post('/credits-agunan/process-add-temp-shm', [AcctCreditsAgunanController::class, 'processAddTempCreditsAgunanSHM'])->name('process-add-temp-credits-agunan-shm');
+
+// configuration-collectibility 
+Route::get('/configuration-collectibility', [PreferenceCollectibilityController::class, 'index'])->name('configuration-collectibility');
+Route::post('/configuration-collectibility/update-konfigurasi-kolektibilitas', [PreferenceCollectibilityController::class, 'updateKonfigurasiKolektibilitas'])->name('update-konfigurasi-kolektibilitas');
+
+// account-collectibility
+Route::get('/account-collectibility', [CollectibiltyCreditsAccountController::class, 'index'])->name('account-collectibility');
+Route::post('/account-collectibility/print-letter-informing/{credits_account_collector_id}', [CollectibiltyCreditsAccountController::class, 'printLetterInforming'])->name('print-letter-informing');
+Route::post('/account-collectibility/process-collectibility', [CollectibiltyCreditsAccountController::class, 'processCollectibilityCreditsAccount'])->name('process-collectibility');
+Route::post('/account-collectibility/filter-collectibility', [CollectibiltyCreditsAccountController::class, 'filterCollectibilityCreditsAccount'])->name('filter-collectibility');
+Route::get('/edit-account-collectibility/{acct_credits_account}', [CollectibiltyCreditsAccountController::class, 'editCollectibilityCreditsAccount'])->name('edit-account-collectibility');
+
+// collector-response 
+Route::post('/collector-report/process-edit/{business_collector_report_id}', [AcctBusinessCollectorReportController::class, 'processEditCollectorReport'])->name('process-edit-collector-report');
+Route::get('/collector-report', [AcctBusinessCollectorReportController::class, 'index'])->name('collector-report');
+Route::post('/collector-report/process-add-collector-report', [AcctBusinessCollectorReportController::class, 'processAddCollectorReport'])->name('process-add-collector-report');
+Route::post('/collector-report/filter-collector-report', [AcctBusinessCollectorReportController::class, 'filterCollectorReport'])->name('filter-collector-report');
+Route::get('/collector-report/edit/{business_collector_report_edit}', [AcctBusinessCollectorReportController::class, 'editCollectorReport'])->name('edit-collector-report');
+Route::post('/collector-report/process-delete/{business_collector_report_id}', [AcctBusinessCollectorReportController::class, 'processDeleteCollectorReport'])->name('process-delete-collector-report');
+Route::get('/collector-report/get-from-letter-informing/{credits_account_collector_id}', [AcctBusinessCollectorReportController::class, 'getFromLetterInforming'])->name('get-from-letter-informing');
+Route::post('/collector-report/mark-done/{business_collector_report_id}', [AcctBusinessCollectorReportController::class, 'processMarkDoneCollectorReport'])->name('process-mark-done-collector-report');
 
 });

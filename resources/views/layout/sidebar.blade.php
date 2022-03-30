@@ -18,11 +18,11 @@
             @endforeach
             @foreach (session()->get('main_dropdown_menu') as $main_dropdown_menu )
                 
-                    <li class="dropdown active{{ request()->routeIs($main_dropdown_menu->link) ? 'active' : '' }}">
+                    <li class="dropdown {{ request()->routeIs($main_dropdown_menu->link) ? 'active' : '' }}">
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th"></i>
                         <span>{{ $main_dropdown_menu->text }}</span>
                         </a>
-                        <ul class="dropdown-menu" style="display: block">
+                        <ul class="dropdown-menu">
                             @foreach (session()->get('submain_dropdown_menu') as $submain_dropdown_menu)
                                 @if ($main_dropdown_menu->id_menu == substr($submain_dropdown_menu->id_menu, 0, 1))                               
                                     <li class="dropdown">

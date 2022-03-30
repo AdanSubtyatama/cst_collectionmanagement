@@ -29,7 +29,7 @@ class CoreBranchController extends Controller
         $request->merge([
             'branch_token' => $this->getToken(),
             'data_state' => 0,
-            'created_id' => '1'
+            'created_id' => auth()->id()
         ]);
         if(CoreBranch::checkToken( $this->getToken())){
             return redirect('/branch')->with('success', 'Data ditambahkan Sebelumnya !');            
@@ -51,7 +51,7 @@ class CoreBranchController extends Controller
         $request->merge([
             'branch_token' => $this->getToken(),
             'data_state' => 0,
-            'updated_id' => '1'
+            'updated_id' => auth()->id()
         ]);
         if(CoreBranch::checkToken( $this->getToken())){
             return redirect('/branch')->with('success', 'Data sudah diubah Sebelumnya !');            
@@ -68,7 +68,7 @@ class CoreBranchController extends Controller
         $branch               = CoreBranch::findOrFail($branch_id);
         $branch->branch_token = $this->getToken();
         $branch->data_state   = 1;
-        $branch->deleted_id   = '1';
+        $branch->deleted_id   = auth()->id();
         $branch->deleted_at   = date("Y-m-d H:i:s");
         if(CoreBranch::checkToken($this->getToken())){
             return redirect('/branch')->with('success', 'Data sudah dihapus Sebelumnya !');            

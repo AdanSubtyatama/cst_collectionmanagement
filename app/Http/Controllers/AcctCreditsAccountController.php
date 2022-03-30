@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AcctCreditsAccountRequest;
 use App\Models\AcctCreditsAccount;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Imports\AcctCreditsAccountImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AcctCreditsAccountController extends Controller
 {
@@ -14,26 +18,34 @@ class AcctCreditsAccountController extends Controller
     public function getToken(){
         return session()->get('credits_account_token');
     }
-   
+    public function clearCreditsAgunanTemp(){
+        session()->forget('credits_agunan');
+    }
     public function index()
     {
-        $this->setToken();       
+        $this->setToken(); $this->clearCreditsAgunanTemp();   
         $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->get();
         return view('creditsAccount.creditsAccount', 
         [
-        'acct_credits_account'      => $acct_credits_account,
-        'acct_credits_account_edit' => new AcctCreditsAccount,
-        'core_province'             => AcctCreditsAccount::getAllProvince(),
-        'core_business_officer'     => AcctCreditsAccount::getAllBusinessOfficer(),
-        'core_branch'               => AcctCreditsAccount::getAllBranch(),
-        'acct_source_fund'          => AcctCreditsAccount::getAllSourceFund(),
-        'acct_credits'              => AcctCreditsAccount::getAllCredits(),
-        
+            'first_date'                => '',
+            'last_date'                 => '',
+            'credits_id'                => '',
+            'branch_id'                 => '',
+            'acct_credits_account'      => $acct_credits_account,
+            'acct_credits_account_edit' => new AcctCreditsAccount,
+            'core_province'             => AcctCreditsAccount::getAllProvince(),
+            'core_business_officer'     => AcctCreditsAccount::getAllBusinessOfficer(),
+            'core_branch'               => AcctCreditsAccount::getAllBranch(),
+            'acct_source_fund'          => AcctCreditsAccount::getAllSourceFund(),
+            'acct_credits'              => AcctCreditsAccount::getAllCredits(),
         ]);
     }
 
     public function processAddCreditsAccount(AcctCreditsAccountRequest $request)
     {   
+
+        $acct_credits_agunan_credits_account = session()->get('credits_agunan');
+        
         $request->merge([
             'credits_account_token' => $this->getToken(),
             'data_state' => 0,
@@ -41,15 +53,59 @@ class AcctCreditsAccountController extends Controller
             'credits_account_due_date' => Date('Y-m-d', strtotime(request()->credits_account_due_date)),
             'credits_account_payment_amount' => str_replace(",", "", request()->credits_account_payment_amount),
             'credits_account_total_amount' => str_replace(",", "", request()->credits_account_total_amount),
-            'credits_account_last_balance' => str_replace(",", "", request()->credits_account_last_balance),         
+            'credits_account_last_balance' => str_replace(",", "", request()->credits_account_last_balance),    
+            'credits_account_interest_amount'   => str_replace(",", "", $request->credits_account_interest_amount),
+            'credits_account_interest_last_balance'   => str_replace(",", "", $request->credits_account_interest_last_balance),
+            'credits_account_accumulated_fines'   => str_replace(",", "", $request->credits_account_accumulated_fines),
         ]);
-
         if(AcctCreditsAccount::checkToken( $this->getToken())){
             return redirect('/credits-account')->with('success', 'Data ditambahkan Sebelumnya !');            
         };
-        AcctCreditsAccount::create($request->all()) ? $msg = 'Data Berhasil Ditambahkan !' : $msg = 'Data gagal Ditambahkan !';
-        
+        // dd(session()->get('credits_agunan'));
+        $credits_account = AcctCreditsAccount::create($request->all()) ;
+        // dd($credits_account->credits_account_id);
+        if($acct_credits_agunan_credits_account){
+            foreach($acct_credits_agunan_credits_account as $credits_agunan){
+                $credits_agunan['credits_account_id'] = $credits_account->credits_account_id;
+                AcctCreditsAccount::addCreditsAgunan( $credits_agunan );
+            }
+        }
+       
+        $credits_account ? $msg = 'Data Berhasil Ditambahkan !' : $msg = 'Data gagal Ditambahkan !';
         return redirect('/credits-account')->with('success', $msg);            
+    }
+
+    public function filterCreditsAccount(Request $request){
+        $this->setToken(); $this->clearCreditsAgunanTemp();
+        
+        if($request->credits_id == '' && $request->branch_id == ''){
+            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)->where('credits_account_date', '<=', $request->last_date)->get();
+
+        }
+        else if($request->credits_id == ''){
+            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)
+                                ->where('credits_account_date', '<=', $request->last_date)->where('branch_id', $request->branch_id)->get();
+        }else if( $request->branch_id == ''){
+            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)
+                                ->where('credits_account_date', '<=', $request->last_date)->where('credits_id', $request->credits_id)->get();
+        }else{
+            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)
+                                ->where('credits_account_date', '<=', $request->credits_id)->where('branch_id', $request->branch_id)->where('credits_id', $request->credits_id)->get();
+        }
+        return view('creditsAccount.creditsAccount', 
+        [
+            'first_date'                => $request->first_date,
+            'last_date'                 => $request->last_date,
+            'credits_id'                => $request->credits_id,
+            'branch_id'                 => $request->branch_id,
+            'acct_credits_account'      => $acct_credits_account,
+            'acct_credits_account_edit' => new AcctCreditsAccount,
+            'core_province'             => AcctCreditsAccount::getAllProvince(),
+            'core_business_officer'     => AcctCreditsAccount::getAllBusinessOfficer(),
+            'core_branch'               => AcctCreditsAccount::getAllBranch(),
+            'acct_source_fund'          => AcctCreditsAccount::getAllSourceFund(),
+            'acct_credits'              => AcctCreditsAccount::getAllCredits(),
+        ]);
     }
 
     public function editCreditsAccount(AcctCreditsAccount $acct_credits_account_edit)
@@ -68,16 +124,19 @@ class AcctCreditsAccountController extends Controller
 
     public function processEditCreditsAccount(AcctCreditsAccountRequest $request, $credits_account_id)
     {
+        
         $request->merge([
             'credits_account_token' => $this->getToken(),
-            'data_state' => 0,
-            'updated_id' => auth()->id(),
-            'credits_account_due_date' => Date('Y-m-d', strtotime($request->credits_account_due_date)),
-            'credits_account_payment_amount' => str_replace(",", "", $request->credits_account_payment_amount),
-            'credits_account_total_amount' => str_replace(",", "", $request->credits_account_total_amount),
-            'credits_account_last_balance' => str_replace(",", "", $request->credits_account_last_balance),
+            'data_state'                        => 0,
+            'updated_id'                        => auth()->id(),
+            'credits_account_due_date'          => Date('Y-m-d', strtotime($request->credits_account_due_date)),
+            'credits_account_payment_amount'    => str_replace(",", "", $request->credits_account_payment_amount),
+            'credits_account_total_amount'      => str_replace(",", "", $request->credits_account_total_amount),
+            'credits_account_last_balance'      => str_replace(",", "", $request->credits_account_last_balance),
+            'credits_account_interest_amount'   => str_replace(",", "", $request->credits_account_interest_amount),
+            'credits_account_interest_last_balance'   => str_replace(",", "", $request->credits_account_interest_last_balance),
+            'credits_account_accumulated_fines'   => str_replace(",", "", $request->credits_account_accumulated_fines),            
         ]);
-
         if(AcctCreditsAccount::checkToken( $this->getToken())){
             return redirect('/credits-account')->with('success', 'Data sudah diubah Sebelumnya !');            
         };
@@ -110,4 +169,30 @@ class AcctCreditsAccountController extends Controller
     public function getKecamatanfromProvince($city_id){
         return AcctCreditsAccount::getKecamatanFromCity($city_id);
     }
+
+    public function processImportExcelCreditsAccount(Request $request ){
+        // validasi
+		$this->validate($request, [
+			'file' => 'required|mimes:csv,xls,xlsx'
+		]);
+ 
+		// menangkap file excel
+		$file = $request->file('file');
+ 
+		// membuat nama file unik
+		$nama_file = rand().$file->getClientOriginalName();
+ 
+		// upload ke folder file_siswa di dalam folder public
+		$file->move('file',$nama_file);
+ 
+		// import data
+		Excel::import(new AcctCreditsAccountImport, public_path('/file/'.$nama_file));
+ 
+		// notifikasi dengan session
+		session()->flash('success','Data Siswa Berhasil Diimport!');
+ 
+		// alihkan halaman kembali
+		return redirect('/credits-account');
+    }
+    
 }

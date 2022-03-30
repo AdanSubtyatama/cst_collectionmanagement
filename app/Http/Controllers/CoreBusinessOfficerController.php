@@ -26,7 +26,7 @@ class CoreBusinessOfficerController extends Controller
         $request->merge([
             'business_officer_token' => $this->getToken(),
             'data_state' => 0,
-            'created_id' => '1'
+            'created_id' => auth()->id()
         ]);
         if(CoreBusinessOfficer::checkToken( $this->getToken())){
             return redirect('/business-officer')->with('success', 'Data ditambahkan Sebelumnya !');            
@@ -47,7 +47,7 @@ class CoreBusinessOfficerController extends Controller
         $request->merge([
             'business_officer_token' => $this->getToken(),
             'data_state' => 0,
-            'updated_id' => '1'
+            'updated_id' => auth()->id()
         ]);
         if(CoreBusinessOfficer::checkToken( $this->getToken())){
             return redirect('/core_business_officer')->with('success', 'Data sudah diubah Sebelumnya !');            
@@ -63,7 +63,7 @@ class CoreBusinessOfficerController extends Controller
         $business_officer               = CoreBusinessOfficer::findOrFail($business_officer_id);
         $business_officer->business_officer_token = $this->getToken();
         $business_officer->data_state   = 1;
-        $business_officer->deleted_id   = '1';
+        $business_officer->deleted_id   = auth()->id();
         $business_officer->deleted_at   = date("Y-m-d H:i:s");
         if(CoreBusinessOfficer::checkToken($this->getToken())){
             return redirect('/business-officer')->with('success', 'Data sudah dihapus Sebelumnya !');            

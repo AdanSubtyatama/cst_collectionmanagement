@@ -26,7 +26,7 @@ class CoreBusinessCollectorController extends Controller
         $request->merge([
             'business_collection_token' => $this->getToken(),
             'data_state' => 0,
-            'created_id' => '1'
+            'created_id' => auth()->id()
         ]);
         if(CoreBusinessCollector::checkToken( $this->getToken())){
             return redirect('/business-collector')->with('success', 'Data ditambahkan Sebelumnya !');            
@@ -47,7 +47,7 @@ class CoreBusinessCollectorController extends Controller
         $request->merge([
             'business_collection_token' => $this->getToken(),
             'data_state' => 0,
-            'updated_id' => '1'
+            'updated_id' => auth()->id()
         ]);
         if(CoreBusinessCollector::checkToken( $this->getToken())){
             return redirect('/core_business_collector')->with('success', 'Data sudah diubah Sebelumnya !');            
@@ -63,7 +63,7 @@ class CoreBusinessCollectorController extends Controller
         $business_collector               = CoreBusinessCollector::findOrFail($business_collector_id);
         $business_collector->business_collection_token = $this->getToken();
         $business_collector->data_state   = 1;
-        $business_collector->deleted_id   = '1';
+        $business_collector->deleted_id   = auth()->id();
         $business_collector->deleted_at   = date("Y-m-d H:i:s");
         $business_collector->save() ? $msg = 'Data Berhasil Dihapus !' : $msg = 'Data Gagal Dihapus !';
 

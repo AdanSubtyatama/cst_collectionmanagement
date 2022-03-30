@@ -17,6 +17,10 @@ class AcctCreditsAccount extends Model
     ];
     use HasFactory;
 
+    public function addCreditsAgunan($credits_agunan){
+        return AcctCreditsAgunan::create($credits_agunan);
+    }
+
     public function checkToken($token){
         return AcctCreditsAccount::where('credits_account_token',  $token)->first() ? true : false;
     }
@@ -75,5 +79,14 @@ class AcctCreditsAccount extends Model
 
     public function getAllBranch(){
         return CoreBranch::get();
+    }
+    public function getAllBusinessCollector(){
+        return CoreBusinessCollector::get();
+    }
+    public function getAllPreferenceCollectibility(){
+        return PreferenceCollectibility::get();
+    }
+    public function getCreditsAccountCollector($credits_account_id){
+        return AcctCreditsAccountCollector::where('credits_account_id', $credits_account_id)->first();
     }
 }
