@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AcctBusinessCollectorReportController;
 use App\Http\Controllers\AcctCreditsAccountController;
+use App\Http\Controllers\AcctCreditsAccountPaymentController;
 use App\Http\Controllers\AcctCreditsAgunanController;
 use App\Http\Controllers\AcctCreditsController;
 use App\Http\Controllers\AcctSourceFundController;
@@ -16,7 +17,6 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PreferenceCollectibilityController;
 use App\Http\Controllers\SystemUserController;
 use App\Http\Controllers\SystemUserGroupController;
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -136,5 +136,13 @@ Route::get('/collector-report/edit/{business_collector_report_edit}', [AcctBusin
 Route::post('/collector-report/process-delete/{business_collector_report_id}', [AcctBusinessCollectorReportController::class, 'processDeleteCollectorReport'])->name('process-delete-collector-report');
 Route::get('/collector-report/get-from-letter-informing/{credits_account_collector_id}', [AcctBusinessCollectorReportController::class, 'getFromLetterInforming'])->name('get-from-letter-informing');
 Route::post('/collector-report/mark-done/{business_collector_report_id}', [AcctBusinessCollectorReportController::class, 'processMarkDoneCollectorReport'])->name('process-mark-done-collector-report');
+
+Route::post('/credits-account-payment/process-edit/{credits_payment_id}', [AcctCreditsAccountPaymentController::class, 'processEditCreditsAccountPayment'])->name('process-edit-credits-account-payment');
+Route::get('/credits-account-payment', [AcctCreditsAccountPaymentController::class, 'index'])->name('credits-account-payment');
+Route::get('/credits-account-payment/add-credits-account-payment', [AcctCreditsAccountPaymentController::class, 'addCreditsAccountPayment'])->name('add-credits-account-payment');
+Route::post('/credits-account-payment/process-add-credits-account-payment', [AcctCreditsAccountPaymentController::class, 'processAddCreditsAccountPayment'])->name('process-add-credits-account-payment');
+Route::post('/credits-account-payment/filter-credits-account-payment', [AcctCreditsAccountPaymentController::class, 'filterCreditsAccountPayment'])->name('filter-credits-account-payment');
+Route::get('/credits-account-payment/edit/{credits_payment_edit}', [AcctCreditsAccountPaymentController::class, 'editCreditsAccountPayment'])->name('edit-credits-account-payment');
+Route::post('/credits-account-payment/process-delete/{credits_payment_id}', [AcctCreditsAccountPaymentController::class, 'processDeleteCreditsAccountPayment'])->name('process-delete-credits-account-payment');
 
 });
