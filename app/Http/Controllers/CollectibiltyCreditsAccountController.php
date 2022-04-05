@@ -152,15 +152,57 @@ class CollectibiltyCreditsAccountController extends Controller
     public function printLetterInforming($credits_account_collector_id){
 
         $acct_credits_account_collector = AcctCreditsAccountCollector::find($credits_account_collector_id);
+        $preferencecompany              = AcctCreditsAccountCollector::preferenceCompany();
         Pdf::SetPrintHeader(false);
 		PDF::SetPrintFooter(false);
-        PDF::SetMargins(20, 30, 20, 20); // put space of 10 on top
+        PDF::SetMargins(10, 7, 10, 10); // put space of 10 on top
         PDF::SetFont('helvetica', '', 10);
-        $html = '
+
+			$img = '<img src="img/logo/'.$preferencecompany['logo_koperasi'].'" alt="" width="113.34px" height="56.7px"/>';
+
+			$html = '
+			<table >
+			    <tr>
+			    	<td rowspan="2" width="14%">'.$img.'</td>
+			        <td width="68%">
+                    <br>
+                    <div style="text-align: center; font-size:12px; font-weight:bold;">'.$preferencecompany['print_title'].'</div></td>
+				</tr>
+				<tr>
+			        <td width="68%"><div style="text-align: center; font-size:9px; font-weight:600;">'.$preferencecompany['print_subtitle'].'</div></td>
+			    </tr>
+			</table>
+			<br/>
+			<hr><hr><hr><hr><hr>
+			<table >
+				
+				<tr>
+					<td width="90%"><div style="text-align: center; font-size:10px; font-weight:500">
+                    <br>
+                    SURAT TUGAS COLLECTOR</div></td>
+				</tr>
+				<tr>
+					<td width="90%"><div style="text-align: center; font-size:9px">Surat Dikeluarkan : '.date('Y-m-s H:i:s').'</div></td>
+				</tr>
+			</table>
+
+            <br><br>
         <table>
             <tr>
-                <td width="20%">Surat Tugas Kepada </td>
-                <td width="20%" style="text-align:right"> : '.$acct_credits_account_collector->businessCollector->business_collector_name.'</td>
+                <td width="40%">Surat Tugas Kepada </td>
+                <td width="40%" style="text-align:left"> : '.$acct_credits_account_collector->businessCollector->business_collector_name.'</td>
+            </tr>
+            <tr>
+                <td width="40%">Dengan Kode Petugas </td>
+                <td width="40%" style="text-align:left"> : '.$acct_credits_account_collector->businessCollector->business_collector_code.'</td>
+            </tr>
+             <tr>
+                <td width="40%">Pada Waktu </td>
+                <td width="40%" style="text-align:left"> : '.date('Y-m-s').'</td>
+            </tr>
+            <tr>
+                <td width="40%"><br>Pengambilan Kewajiban Kepada </td>
+                <td width="40%" style="text-align:left"><br> : '.$acct_credits_account_collector->creditsAccount->credits_account_name.'</td>
             </tr>
         </table>
         

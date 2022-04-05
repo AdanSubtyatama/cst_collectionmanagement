@@ -177,15 +177,23 @@ class LateReportsController extends Controller
         if($type_memorandum == 'ST'){
             $letter_number      =  $data_memorandum->credits_reprimand_letter;
             $letter_reference   =  $data_memorandum->credits_account_serial;
+           $regreding           = 'Surat Teguran'; 
+           $deadline            = $company->duration_due_date_st;
         }else if($type_memorandum == 'SP1'){
             $letter_number      =  $data_memorandum->credits_warning_letter_1;
             $letter_reference   =  $data_memorandum->credits_reprimand_letter;
+            $regreding          = 'Surat Peringatan 1';
+            $deadline           = $company->duration_due_date_sp1;
         }else if($type_memorandum == 'SP2'){
             $letter_number      =  $data_memorandum->credits_warning_letter_2;
             $letter_reference   =  $data_memorandum->credits_warning_letter_1;
+            $regreding          = 'Surat Peringatan 2';
+            $deadline           = $company->duration_due_date_sp2;
         }else if($type_memorandum == 'SP3'){
             $letter_number      =  $data_memorandum->credits_warning_letter_3;
             $letter_reference   =  $data_memorandum->credits_warning_letter_2;
+            $regreding          = 'Surat Peringatan 3';
+            $deadline           = $company->duration_due_date_sp3;
         }
         
         $credits_interest_acctualy = $data_memorandum->credits_account->credits_account_interest_amount * $data_memorandum->credits_account->credits_account_period;
@@ -214,7 +222,7 @@ class LateReportsController extends Controller
                 <td width="50%" style="text-align:right">'.$data_memorandum->branch->branch_address.', '.tgl_indo(date('d-m-Y')).' </td>
             </tr>
         </table>
-        <span>Kepada</span><br><span>Yth. Bp/ Ibu/ Sdr / Sdri</span><br><span><b><u>'.$data_memorandum->credits_account->credits_account_name.'</u></b></span><br><span>'.$data_memorandum->credits_account->credits_account_address.'</span><br><br><br><span>Perihal : Surat Teguran</span><br><br><span><i>Assalamualaikum Warahmatullahi Wabarakatuh</i></span><br><span>Dengan Hormat,</span><br><p>Menunjuk : Perjanjian Kredit Nomor : '.$letter_reference.' '.$data_memorandum->credits_account->credits_account_date.' 
+        <span>Kepada</span><br><span>Yth. Bp/ Ibu/ Sdr / Sdri</span><br><span><b><u>'.$data_memorandum->credits_account->credits_account_name.'</u></b></span><br><span>'.$data_memorandum->credits_account->credits_account_address.'</span><br><br><br><span>Perihal : '.$regreding.'</span><br><br><span><i>Assalamualaikum Warahmatullahi Wabarakatuh</i></span><br><span>Dengan Hormat,</span><br><p>Menunjuk : Perjanjian Kredit Nomor : '.$letter_reference.' '.$data_memorandum->credits_account->credits_account_date.' 
         </p>
         <p style="text-align:justify">Bersama ini kami memberitahukan dan mengingatkan bahwa saudara telah melakukan wanprestasi, sehingga terdapat keterlambatan pembayaran kewajiban pokok dan/atau bunga, denda keterlambatan dan kewajiban lainnya yang timbul atas fasilitas kredit Saudara di KOPERASI '.$company->company_name.', '.$data_memorandum->branch->branch_name.'. Fasilitas Pinjaman '.$data_memorandum->credits_account->credits->credits_name.'. Selama : 3 hari sampai dengan tanggal Surat Teguran ini di cetak
         </p>
@@ -235,7 +243,7 @@ class LateReportsController extends Controller
                 <td>Rp. '.number_format($total_amount , 2).'</td>
             </tr>
         </table>
-        <p>Kami harapkan kerjasama yang baik dari Saudara untuk menyelesaikan seluruh kewajiban tersebut selambat-lambatnya pada '.$tunggakan2.' hari Kerja sejak tanggal surat ini tercetak
+        <p>Kami harapkan kerjasama yang baik dari Saudara untuk menyelesaikan seluruh kewajiban tersebut selambat-lambatnya pada '.$deadline.' hari Kerja sejak tanggal surat ini tercetak
         </p>
         <p>hal tersebut guna menjaga <b>kredibilitas</b> dan <b>track record</b> pinjaman Saudara di PT Madani Indonesia</p>
         <p>Demikian kami sampaikan, atas perhatian dan kerjasama yang baik, kami ucapkan terima kasih.<br><i>Wassalamu’alaikum Warahmatullahi Wabarakatuh</i></p>

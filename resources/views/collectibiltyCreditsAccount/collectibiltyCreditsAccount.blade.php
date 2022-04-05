@@ -170,7 +170,7 @@
                             <td>{{ $credits_account->credits_account_date }}</td>
                             <td>{{ $credits_account->credits_account_due_date }}</td>
                             <td>{{ $credits_account->credits_account_payment_date }}</td>
-                            <td>{{ $credits_account_collector['business_collector_id'] }}</td>
+                            <td>{{ $credits_account->creditsAccountCollector['businessCollector']['business_collector_name'] }}</td>
                             <td>
                                 <span class="btn 
                                 @if($credits_account->collectibility_name == 'LANCAR')
@@ -186,7 +186,7 @@
                             <td style="min-width: 150px">                                
                                 <button class="btn btn-sm btn-primary editCollectibilityCreditsAccount" data-accountname="{{ $credits_account->credits_account_name }}" data-accountid="{{ $credits_account->credits_account_id }}" data-id="{{ $credits_account_collector['business_collector_id'] }}"  data-accountcollectorid="{{ $credits_account_collector['credits_account_collector_id'] }}" id="editCollectibilityCreditsAccount"><i class="fas fa-id-card"></i> Pilih Kollektor</button>       
                                 
-                                @if($credits_account_collector['business_collector_id'])
+                                @if($credits_account->creditsAccountCollector['business_collector_id'])
                                 <form action="{{ route('print-letter-informing', $credits_account_collector['credits_account_collector_id']) }}" method="POST">
                                     @csrf
                                 <button  onclick="return confirm('Anda yakin akan mencetak surat tugasi ini ?')" class="btn btn-sm btn-success" type="submit"><i class="fas fa-print"></i> Surat Tugas</button>

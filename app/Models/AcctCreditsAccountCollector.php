@@ -31,4 +31,7 @@ class AcctCreditsAccountCollector extends Model
     {
         return $this->hasMany(AcctBusinessCollectorReport::class);
     }
+    public function preferenceCompany(){
+        return preferenceCompany::first();
+    }
 }

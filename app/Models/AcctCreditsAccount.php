@@ -89,4 +89,8 @@ class AcctCreditsAccount extends Model
     public function getCreditsAccountCollector($credits_account_id){
         return AcctCreditsAccountCollector::where('credits_account_id', $credits_account_id)->first();
     }
+
+    public function creditsAccountCollector(){
+        return $this->hasOne(AcctCreditsAccountCollector::class, 'credits_account_id');
+    }
 }

@@ -77,28 +77,28 @@ class AcctCreditsAccountController extends Controller
 
     public function filterCreditsAccount(Request $request){
         $this->setToken(); $this->clearCreditsAgunanTemp();
+        $acct_credits_account = AcctCreditsAccount::where('data_state', '0');
         
-        if($request->credits_id == '' && $request->branch_id == ''){
-            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)->where('credits_account_date', '<=', $request->last_date)->get();
-
+        if($request->first_date != ''){
+            $acct_credits_account->where('credits_account_date', '>=', $request->first_date);
         }
-        else if($request->credits_id == ''){
-            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)
-                                ->where('credits_account_date', '<=', $request->last_date)->where('branch_id', $request->branch_id)->get();
-        }else if( $request->branch_id == ''){
-            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)
-                                ->where('credits_account_date', '<=', $request->last_date)->where('credits_id', $request->credits_id)->get();
-        }else{
-            $acct_credits_account = AcctCreditsAccount::where('data_state', '0')->where('credits_account_date', '>=', $request->first_date)
-                                ->where('credits_account_date', '<=', $request->credits_id)->where('branch_id', $request->branch_id)->where('credits_id', $request->credits_id)->get();
+        if($request->last_date != ''){
+            $acct_credits_account->where('credits_account_date', '<=', $request->last_date);
         }
+        if($request->credits_id != ''){
+            $acct_credits_account->where('credits_id', $request->credits_id);
+        }
+         if($request->branch_id != ''){
+            $acct_credits_account->where('branch_id', $request->branch_id);
+        }
+        
         return view('creditsAccount.creditsAccount', 
         [
             'first_date'                => $request->first_date,
             'last_date'                 => $request->last_date,
             'credits_id'                => $request->credits_id,
             'branch_id'                 => $request->branch_id,
-            'acct_credits_account'      => $acct_credits_account,
+            'acct_credits_account'      => $acct_credits_account->get(),
             'acct_credits_account_edit' => new AcctCreditsAccount,
             'core_province'             => AcctCreditsAccount::getAllProvince(),
             'core_business_officer'     => AcctCreditsAccount::getAllBusinessOfficer(),
