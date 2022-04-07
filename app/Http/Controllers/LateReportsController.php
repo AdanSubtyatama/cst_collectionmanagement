@@ -85,16 +85,17 @@ class LateReportsController extends Controller
         $this->setToken();
 
         $acct_credits_account = AcctCreditsAccount::where('data_state', '0');
-        
         if($request->first_date){
             $acct_credits_account->where('credits_account_date', '>=', $request->first_date);
         }
         if($request->last_date){
             $acct_credits_account->where('credits_account_date', '<=', $request->last_date);
         }
+
         if($request->credits_id){
             $acct_credits_account->where('credits_id', $request->credits_id);
         }
+
         if($request->branch_id){
             $acct_credits_account->where('branch_id', $request->branch_id);
         }
@@ -117,7 +118,7 @@ class LateReportsController extends Controller
             'business_collector_id'     => $request->business_collector_id,
             'business_officer_id'       => $request->business_officer_id,
             'collectibility_id'         => $request->collectibility,
-            'acct_credits_account'      => $acct_credits_account,
+            'acct_credits_account'      => $acct_credits_account->get(),
             'acct_credits_account_edit' => new AcctCreditsAccount,
             'core_business_collector'   => AcctCreditsAccount::getAllBusinessCollector(),
             'core_business_officer'     => AcctCreditsAccount::getAllBusinessOfficer(),

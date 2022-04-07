@@ -122,7 +122,7 @@
                             <td>{{ $business_collector_report->business_collector_report_meeting_date }}</td>
                             <td>{{ $business_collector_report->created_at }}</td>
                             <td>{{ $business_collector_report->creditsAccountCollector['businessCollector']['business_collector_name'] }}</td>
-                            <td>{{ $business_collector_report->business_collector_credit_account_status }}</td>
+                            <td>{{ $business_collector_report->business_collector_credit_account_status == '1' ? 'Selesai' : '-' }}</td>
                             <td style="min-width: 150px">                                
                                 <div class="row pl-2 pb-1">
                                     <div class="col-3 m-0 pl-2">
@@ -135,11 +135,13 @@
                                             <button onclick="return confirm('Anda yakin ingin menghapus data ini ?')" class="btn btn-sm btn-danger" type="submit" ><i class="fas fa-trash"></i></button>
                                         </form>
                                     </div>
-                                </div>  
+                                </div> 
+                                @if($business_collector_report->business_collector_credit_account_status != 1)
                                 <form class="form-inline" action="{{ route('process-mark-done-collector-report', $business_collector_report->business_collector_report_id) }}" method="POST">
                                     @csrf
                                     <button onclick="return confirm('Anda yakin menandai peminjam ini selesai ?')" type="submit" class="btn btn-sm btn-success editCollectorReport mb-2" id="editCollectorReport"><i class="fas fa-check-circle"></i> Tandai Selesai </button> 
                                 </form>     
+                                @endif
                                 <button type="button" class="btn btn-sm btn-success detailCollectorReport mb-2" id="detailCollectorReport" data-backdrop='static' data-keyboard='false'
                                 data-branch_name="{{ $business_collector_report->branch['branch_name'] }}" data-credits_account_name="{{ $business_collector_report->creditsAccountCollector['creditsAccount']['credits_account_name'] }}" data-credits_account_address="{{ $business_collector_report->creditsAccountCollector['creditsAccount']['credits_account_address'] }}" data-business_collector_name="{{ $business_collector_report->creditsAccountCollector['businessCollector']['business_collector_name'] }}" data-credits_account_collector_letter_informing="{{ $business_collector_report->creditsAccountCollector->credits_account_collector_letter_informing  }}" data-business_collector_report_date="{{ $business_collector_report->business_collector_report_date }}" data-business_collector_report_meeting_date="{{ $business_collector_report->business_collector_report_meeting_date }}" data-business_collector_report_description="{{ $business_collector_report->business_collector_report_description }}" data-business_collector_report_picture="{{ $business_collector_report->business_collector_report_picture }}" data-business_collector_report_others_contact="{{ $business_collector_report->business_collector_report_others_contact }}" data-business_collector_report_meeting_with="{{ $business_collector_report->business_collector_report_meeting_with }}"
                                  ><i class="fas fa-info-circle"></i> Detail </button>                            
